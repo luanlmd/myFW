@@ -1,0 +1,8 @@
+<?
+class Controller
+{	
+	function render()
+	{
+	}
+}
+?>
