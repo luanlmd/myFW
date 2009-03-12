@@ -26,7 +26,10 @@ class View extends Object
 			}
 			catch(Exception $ex) { throw $ex; }
 			$content = ob_get_clean();
-			foreach (self::$variables as $k => $v) { $content = str_replace("%".$k."%",$v,$content); }
+			foreach (self::$variables as $k => $v) 
+			{
+				if (!is_object($v)) { $content = str_replace("%".$k."%",$v,$content); }
+			}
 			return $content;
 		}
 		else { throw new Exception("View ".$view." not found");	}	
