@@ -1,4 +1,4 @@
-<?
+<?php
 class Session 
 {
 	public static function set ($name , $value)
@@ -34,4 +34,3 @@ class Session
 		return isset($arr->$name)? $arr->$name : null;
 	}
 }
-?>

@@ -1,4 +1,4 @@
-<?
+<?php
 class Form
 {
 	public static $messages = array();
@@ -27,4 +27,3 @@ class Form
 		return !!count(self::$messages);
 	}
 }
-?>

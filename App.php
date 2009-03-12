@@ -1,4 +1,4 @@
-<?
+<?php
 function __autoload($class)
 {
 	if (class_exists($class, false)) { return; }
@@ -103,4 +103,3 @@ class App
 		else { echo Template::render(View::render()); }
 	}
 }
-?>

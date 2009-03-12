@@ -1,4 +1,4 @@
-<?
+<?php
 class Object
 {
 	public function __set ($name , $value)
@@ -18,4 +18,3 @@ class Object
 		throw new Exception("Undefined Property $name");
 	}
 }
-?>

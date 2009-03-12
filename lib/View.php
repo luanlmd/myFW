@@ -1,4 +1,4 @@
-<?
+<?php
 class View extends Object
 {
 	private static $variables = array();
@@ -35,4 +35,3 @@ class View extends Object
 		else { throw new Exception("View ".$view." not found");	}	
 	}
 }
-?>

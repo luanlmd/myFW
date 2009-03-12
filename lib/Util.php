@@ -1,9 +1,8 @@
-<?
+<?php
 class Util
 {
-
 	//Remove spaces and international caracters from the string
-	static function text2url($t, $hifen=true)
+	static function text2url($t)
 	{
 		$t = trim(strtolower(utf8_decode($t)));
 		$t = ereg_replace(utf8_decode("[áàâãä]"), "a", $t);
@@ -30,7 +29,7 @@ class Util
 		return $str."Controller";
 	}
 	
-	//Transform a url string to method names (url-string to methodName)
+	//Transform a url string to method names (url-address to urlAddress)
 	static function urlToMethod($methodName)
 	{
 		$arr = explode("-",$methodName);
@@ -42,5 +41,23 @@ class Util
 		}
 		return $str;
 	}
+	
+	//Encrypt $b using the key $b
+	static function crypt($a,$b) 
+    {
+		if ($b=='') { $b = '!2s@5#5df4$we5%g4*5t55(c*/.)'; }
+		if ($a=='') return '';
+			
+		$retorno = ""; 
+		$i = strlen($a)-1; 
+		$j = strlen($b);
+		    
+		do { $retorno .= ($a{$i} ^ $b{$i % $j}); }
+		while ($i--);
+		    
+		return strrev($retorno);
+    }
+    
+    static function encrypt($string, $c = '') { return base64_encode(self::crypt($string, $c)); }
+    static function decrypt($string, $c = '') { return self::crypt(base64_decode($string), $c); }
 }
-?>

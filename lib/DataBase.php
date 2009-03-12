@@ -18,8 +18,13 @@ class DataBase
 	function connect($dsn, $user, $pass)
 	{
 		$this->pdo = new PDO($dsn, $user, $pass);
-		$this->pdo->setAttribute( PDO::ATTR_ERRMODE, PDO::ERRMODE_EXCEPTION);
+		$this->pdo->setAttribute(PDO::ATTR_ERRMODE, PDO::ERRMODE_EXCEPTION);
 		return $this;
+	}
+	
+	function &getPDO()
+	{
+		return $this->pdo;
 	}
 	
 	public function prepare($sql)
@@ -34,8 +39,8 @@ class DataBase
 	}
 	
 	//Execute a query and return the Object
-	public function query($sql,$class = "Object")
+	public function query($sql,$object = "Object")
 	{
-		return $this->pdo->query($sql, PDO::FETCH_CLASS,$class);
+		return $this->pdo->query($sql, is_object($object)? PDO::FETCH_INTO : PDO::FETCH_CLASS ,$object);	
 	}
 }

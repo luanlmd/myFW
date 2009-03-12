@@ -1,4 +1,4 @@
-<?
+<?php
 class Template
 {
 	private static $template = "default";
@@ -32,4 +32,3 @@ class Template
 		else { throw new Exception("Template ". self::$template ." not found."); }
 	}
 }
-?>

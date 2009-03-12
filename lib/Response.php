@@ -1,4 +1,4 @@
-<?
+<?php
 class Response
 {
 	static function redirect($url = "", $external = false)
@@ -12,4 +12,3 @@ class Response
 		die();
 	}
 }
-?>

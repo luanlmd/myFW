@@ -1,7 +1,6 @@
-<?
+<?php
 class Cookie 
 {
-
 	private static function generateName($name)
 	{
 		return md5(Crypt::encrypt($name,App::$projectId));
@@ -27,4 +26,3 @@ class Cookie
 		return (isset($_COOKIE[$name])? Crypt::decrypt($_COOKIE[$name],App::$projectId.$name) : null);
 	}
 }
-?>

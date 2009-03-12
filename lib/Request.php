@@ -1,4 +1,4 @@
-<?
+<?php
 class Request
 {
 	static private function removeInjection($tmp)
@@ -71,4 +71,3 @@ class Request
 		return !Request::isPost();
 	}
 }
-?>
