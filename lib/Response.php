@@ -5,7 +5,7 @@ class Response
 	{
 		if ($external)
 		{
-			header("Location: ".$url);
+			header("Location: ". new Link($url));
 			die();
 		}
 		header("Location: ".App::$virtualRoot.$url);

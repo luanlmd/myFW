@@ -1,5 +1,5 @@
 <?php
-class View extends Object
+class View
 {
 	private static $variables = array();
 	static function set($methodName)
@@ -16,7 +16,7 @@ class View extends Object
 	}
 	static function render()
 	{
-		$view = "app/views/".App::$controlName."/".App::$methodName.".php";
+		$view = "app/views/".App::$controlName."/".App::$methodName.".phtml";
 		if (file_exists($view)) 
 		{
 			ob_start();

@@ -19,7 +19,7 @@ class Template
 	public static function render($content)
 	{
 		self::setVar("content",$content);
-		$template = "app/templates/".self::$template."/index.php";
+		$template = "app/templates/".self::$template."/index.phtml";
 		if (file_exists($template))
 		{
 			ob_start();
@@ -29,6 +29,6 @@ class Template
 			foreach (self::$variables as $k => $v) { $content = str_replace("%".$k."%",$v,$content); }
 			return $content;
 		}
-		else { throw new Exception("Template ". self::$template ." not found."); }
+		else { throw new Exception("Template ". $template ." not found."); }
 	}
 }

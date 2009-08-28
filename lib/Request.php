@@ -8,11 +8,12 @@ class Request
 		return trim($tmp);
 	}
 
-	static function get($v)
+	static function get($v = null)
 	{
 		global $_GET;
-		if (!isset($_GET[$v]))
-			return '';
+		if (!$v) { return $_GET; }
+		if (!isset($_GET[$v])) { return null; }
+		
 		return self::removeInjection($_GET[$v]);
 	}
 
@@ -68,6 +69,14 @@ class Request
 	}
 	static function isGet()
 	{
-		return !Request::isPost();
+		return ($_SERVER["REQUEST_METHOD"] == "GET");
+	}
+	static function isDelete()
+	{
+		return ($_SERVER["REQUEST_METHOD"] == "DELETE");
+	}
+	static function isPut()
+	{
+		return ($_SERVER["REQUEST_METHOD"] == "PUT");
 	}
 }

@@ -1,5 +1,5 @@
 <?php
-class Object
+class DTO
 {
 	public function __set ($name , $value)
 	{
