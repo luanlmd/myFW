@@ -1,3 +1,3 @@
 <?php
 require("App.php");
-App::run("thinphp","/thinphp");
+App::run("Your Project Name/ID");

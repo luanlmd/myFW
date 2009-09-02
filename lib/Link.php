@@ -10,6 +10,6 @@ class Link
 	
 	function __toString()
 	{
-		return App::$virtualRoot."/".$this->uri;
+		return App::$virtualRoot.$this->uri;
 	}
 }

@@ -57,10 +57,10 @@ class App
 		self::$routes[] = array($re,$c,$m);
 	}
 	
-	function run($projectId = "thinphp",$virtualRoot = "/")
+	function run($projectId = "thinphp")
 	{
 		self::$projectId = $projectId;
-		self::$virtualRoot = $virtualRoot;
+		self::$virtualRoot = str_replace($_SERVER["DOCUMENT_ROOT"],"",str_replace("index.php", "", $_SERVER["SCRIPT_FILENAME"]));
 
 		if (Request::par(0) == "index") { Response::redirect("/"); } 
 		
