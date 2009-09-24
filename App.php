@@ -7,8 +7,7 @@ function __autoload($class)
 	$fwPath = str_replace("App.php","",__FILE__);
 	
 	$files = array();
-	$files[] = "lib/{$class}.php";
-	$files[] = "app/lib/{$class}.php";
+	$files[] = "app/libs/{$class}.php";
 	$files[] = "app/controllers/{$class}.php";
 	$files[] = "app/models/{$class}.php";
 	
