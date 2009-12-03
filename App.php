@@ -56,12 +56,35 @@ class App
 		self::$routes[] = array($re,$c,$m);
 	}
 	
-	function run($projectId = "thinphp")
+	static function render($control, $method)
+	{
+		$control = Util::urlToClass($control);
+		$method = Util::urlToMethod($method);
+		
+		if (class_exists($control, false))
+		{		
+			$control = new $control();
+					
+			if (method_exists($control,$method))
+			{
+				$control->$method();
+			}
+		}
+		else
+		{
+			$control = new Controller();
+		}
+		
+		return $control->render();
+	}
+	
+	static function run($projectId = "thinphp")
 	{
 		self::$projectId = $projectId;
 		self::$virtualRoot = str_replace($_SERVER["DOCUMENT_ROOT"],"",str_replace("index.php", "", $_SERVER["SCRIPT_FILENAME"]));
 
-		if (Request::par(0) == "index") { Response::redirect("/"); } 
+		if (Request::par(0) == "index") { Response::redirect(Request::par(1)); }
+		if (Request::par(1) == "index") { Response::redirect(Request::par(0)); }  
 		
 		date_default_timezone_set("Etc/GMT");
 		header("Content-Type: text/html; charset=utf-8");
@@ -89,16 +112,11 @@ class App
 		if (!self::$controlName) { self::$controlName = (Request::par(0))? Request::par(0) : "index"; }
 		if (!self::$methodName)	{ self::$methodName = (Request::par(1))? Request::par(1) : "index";	}
 		
-		//Standartize names
-		$control = Util::urlToClass(self::$controlName);
-		$method = Util::urlToMethod(self::$methodName);
-
-		//Instance the controller and call the method		
-		$control = new $control;
-		$control->$method();
-		
 		//Render the view and the template
-		if (Request::isAjax()) { echo View::render(); }
-		else { echo Template::render(View::render()); }
+		
+		$render = self::render(self::$controlName, self::$methodName);
+		
+		if (Request::isAjax()) { echo $render; }
+		else { echo Template::render($render); }
 	}
 }

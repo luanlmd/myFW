@@ -1,32 +1,33 @@
 <?php
 class View
 {
-	private static $variables = array();
-	static function set($methodName)
+	private $variables = array();
+	public function set($methodName)
 	{
 		return App::$methodName = $methodName;
 	}
-	public static function setVar($var,$value)
+	public function setAttr($var,$value)
 	{
-		return self::$variables[$var] = $value;
+		return $this->variables[$var] = $value;
 	}
-	public function getVar($var)
+	public function getAttr($var)
 	{
-		return self::$variables[$var];
+		return $this->variables[$var];
 	}
-	static function render()
+	public function render()
 	{
 		$view = "app/views/".App::$controlName."/".App::$methodName.".phtml";
 		if (file_exists($view)) 
 		{
 			ob_start();
-			foreach (self::$variables as $k => $v) { $$k = $v; }
-			try {
+			foreach ($this->variables as $k => $v) { $$k = $v; }
+			try
+			{
 				require ($view);
 			}
 			catch(Exception $ex) { throw $ex; }
 			$content = ob_get_clean();
-			foreach (self::$variables as $k => $v) 
+			foreach ($this->variables as $k => $v) 
 			{
 				if (!is_object($v)) { $content = str_replace("%".$k."%",$v,$content); }
 			}
