@@ -31,8 +31,8 @@ function __autoload($class)
 		}
 	}	
 
-	//If couldn't find the class
-	throw new Exception("Class $class not found");
+	//Must not throw an Exception in order to be able to verify if a class exist
+	return;
 }
 
 class App
@@ -45,37 +45,28 @@ class App
 	
 	private static $routes = array();
 	
-	static function setView($methodName, $controlName = "")
-	{
-		self::$methodName = $methodName;
-		self::$controlName = $controlName;
-	}
-	
 	static function addRoute($re, $c = "index", $m = "index")
 	{
 		self::$routes[] = array($re,$c,$m);
 	}
 	
-	static function render($control, $method)
+	static function render($controllerName, $actionName)
 	{
-		$control = Util::urlToClass($control);
-		$method = Util::urlToMethod($method);
+		$viewExists = View::exists($controllerName, $actionName);
 		
-		if (class_exists($control, false))
-		{		
-			$control = new $control();
-					
-			if (method_exists($control,$method))
-			{
-				$control->$method();
-			}
-		}
-		else
+		$controllerClass = Util::urlToClass($controllerName);
+		$actionMethod = Util::urlToMethod($actionName);
+	
+		if (class_exists($controllerClass))
 		{
-			$control = new Controller();
+			$controllerInstance = new $controllerClass($controllerName, $actionName);
+			if (is_callable(array($controllerClass,$actionMethod))) $controllerInstance->$actionMethod();
+			else if (!$viewExists) throw new Exception("Action {$controllerClass}/{$actionMethod} not found");
 		}
-		
-		return $control->render();
+		else if (!$viewExists) throw new Exception("Controller {$controllerClass} not found");
+		else $controllerInstance = new Controller();
+				
+		return $controllerInstance->render();
 	}
 	
 	static function run($projectId = "thinphp")
@@ -83,6 +74,7 @@ class App
 		self::$projectId = $projectId;
 		self::$virtualRoot = str_replace($_SERVER["DOCUMENT_ROOT"],"",str_replace("index.php", "", $_SERVER["SCRIPT_FILENAME"]));
 
+		//Remove URL's useless parts
 		if (Request::par(0) == "index") { Response::redirect(Request::par(1)); }
 		if (Request::par(1) == "index") { Response::redirect(Request::par(0)); }  
 		
@@ -91,13 +83,13 @@ class App
 		session_start();
 		
 		//Verify if IndexController has the method/view of the first parameter
-		if (!Request::par(1) && method_exists("IndexController",Util::urlToMethod(Request::par(0))))
+		if (!Request::par(1) && (is_callable("IndexController",Util::urlToMethod(Request::par(0))) || View::exists("index", Request::par(0)) ))
 		{
 			self::$controlName = "index";
 			self::$methodName = Request::par(0);
 		}
 		
-		//Look for a route that match the url, if find, set the controllar and method
+		//Look for a route that match the url, if find, set the controller and method
 		foreach (self::$routes as $r)
 		{
 			if (ereg($r[0], Request::uri(), $match))
@@ -113,10 +105,6 @@ class App
 		if (!self::$methodName)	{ self::$methodName = (Request::par(1))? Request::par(1) : "index";	}
 		
 		//Render the view and the template
-		
-		$render = self::render(self::$controlName, self::$methodName);
-		
-		if (Request::isAjax()) { echo $render; }
-		else { echo Template::render($render); }
+		echo self::render(self::$controlName, self::$methodName);
 	}
 }

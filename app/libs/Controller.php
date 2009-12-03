@@ -2,19 +2,26 @@
 class Controller
 {
 	var $_view = null;
+	var $_layout = null;
 	
-	function __construct()
+	function __construct($controller, $action)
 	{
-		$this->_view = new View();
+		$this->_view = new View($controller, $action);
+		$this->_layout = new Layout();
 	}
 	
 	/**
 	* Render the View
-	*
 	*/
 	function render()
 	{
-		return $this->_view->render();
+		if (Request::isAjax()) { return $this->_view->render(); }
+		else
+		{
+			$content = $this->_view->render();
+			$this->_layout->setAttr("content",$content);
+			return $this->_layout->render();
+		}
 	}
 	
 	/**

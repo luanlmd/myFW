@@ -1,31 +1,48 @@
 <?php
 class View
 {
+	private $action = null;
+	private $controller = null;
+	private $file = null;
 	private $variables = array();
-	public function set($methodName)
+	
+	function __construct($controller, $action)
 	{
-		return App::$methodName = $methodName;
+		$this->controller = $controller;
+		$this->action = $action;
+		$this->file = "app/views/{$this->controller}/{$this->action}.phtml";
 	}
+
+	static function exists($controller, $action)
+	{
+		return file_exists("app/views/{$controller}/{$action}.phtml");
+	}
+	
+	public function set($controller = null, $action = null)
+	{
+		if ($action) { $this->action = $action; }
+		if ($controller) { $this->controller = $controller; }
+	}
+	
 	public function setAttr($var,$value)
 	{
 		return $this->variables[$var] = $value;
 	}
+	
 	public function getAttr($var)
 	{
 		return $this->variables[$var];
 	}
+	
 	public function render()
 	{
-		$view = "app/views/".App::$controlName."/".App::$methodName.".phtml";
-		if (file_exists($view)) 
+		if (self::exists($this->controller, $this->action)) 
 		{
 			ob_start();
 			foreach ($this->variables as $k => $v) { $$k = $v; }
-			try
-			{
-				require ($view);
-			}
-			catch(Exception $ex) { throw $ex; }
+
+			require ($this->file);
+
 			$content = ob_get_clean();
 			foreach ($this->variables as $k => $v) 
 			{
@@ -33,6 +50,6 @@ class View
 			}
 			return $content;
 		}
-		else { throw new Exception("View ".$view." not found");	}	
+		else { throw new Exception("View {$this->controller}/{$this->action} not found"); }	
 	}
 }
