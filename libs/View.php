@@ -10,12 +10,12 @@ class View
 	{
 		$this->controller = $controller;
 		$this->action = $action;
-		$this->file = "app/views/{$this->controller}/{$this->action}.phtml";
+		$this->file = "../views/{$this->controller}/{$this->action}.phtml";
 	}
 
 	static function exists($controller, $action)
 	{
-		return file_exists("app/views/{$controller}/{$action}.phtml");
+		return file_exists("../views/{$controller}/{$action}.phtml");
 	}
 	
 	public function set($controller = null, $action = null)

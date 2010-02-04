@@ -34,7 +34,7 @@ class Controller
 	private function __set($attr, $val)
 	{
 		if ($attr == '_view') { $this->_view->set($val); }
-		else if ($attr == '_template') { Template::set($val); }
+		else if ($attr == '_layout') { $this->_layout->set($val); }
 		else { $this->_view->setAttr($attr, $val); }
 	}
 	

@@ -4,9 +4,9 @@ class Layout
 	private $name = "default";
 	private $variables = array();
 	
-	public function set($template)
+	public function set($name)
 	{
-		return $this->name = $template;
+		return $this->name = $name;
 	}
 	
 	public function setAttr($attr,$val)
@@ -21,7 +21,7 @@ class Layout
 	
 	public function render()
 	{
-		$file = "app/layouts/{$this->name}/index.phtml";
+		$file = "../layouts/{$this->name}/index.phtml";
 		if (file_exists($file))
 		{
 			ob_start();
@@ -33,6 +33,6 @@ class Layout
 			foreach ($this->variables as $k => $v) { $content = str_replace("%".$k."%",$v,$content); }
 			return $content;
 		}
-		else { throw new Exception("Layout {$template} not found."); }
+		else { throw new Exception("Layout {$this->name} not found."); }
 	}
 }

@@ -17,16 +17,16 @@ class Util
 		return utf8_encode($t);
 	}
 	
-	//Transform a url string to class names (url-address to UrlAddress)
-	static function urlToClass($controlName)
+	function camelize($str, $lower = false)
 	{
-		$arr = explode("-",$controlName);
-		$str = "";
-		foreach($arr as $i)
-		{
-			$str .= ucwords($i);
-		}
-		return $str."Controller";
+		$str = str_replace(' ', '', ucwords(str_replace(array('_', '-'), ' ', $str)));
+		if ($lower) return lcfirst($str);
+		return $str;
+	}
+
+	function uncamelize($str)
+	{
+		return preg_replace('@^_+|_+$@', '', strtolower(preg_replace("/([A-Z])/", "_$1", ucfirst($str))));
 	}
 	
 	//Transform a url string to method names (url-address to urlAddress)
@@ -40,6 +40,18 @@ class Util
 			$str .= ucwords($i);
 		}
 		return $str;
+	}
+	
+	//Transform a url string to class names (url-address to UrlAddress)
+	static function urlToClass($controlName)
+	{
+		$arr = explode("-",$controlName);
+		$str = "";
+		foreach($arr as $i)
+		{
+			$str .= ucwords($i);
+		}
+		return $str."Controller";
 	}
 	
 	//Encrypt $b using the key $b

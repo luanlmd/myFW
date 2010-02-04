@@ -7,9 +7,9 @@ function __autoload($class)
 	$fwPath = str_replace("App.php","",__FILE__);
 	
 	$files = array();
-	$files[] = "app/libs/{$class}.php";
-	$files[] = "app/controllers/{$class}.php";
-	$files[] = "app/models/{$class}.php";
+	$files[] = "../libs/{$class}.php";
+	$files[] = "../controllers/{$class}.php";
+	$files[] = "../models/{$class}.php";
 	
 	//Application folder classes
 	foreach ($files as $file)
@@ -72,7 +72,7 @@ class App
 	static function run($projectId = "thinphp")
 	{
 		self::$projectId = $projectId;
-		self::$virtualRoot = str_replace($_SERVER["DOCUMENT_ROOT"],"",str_replace("index.php", "", $_SERVER["SCRIPT_FILENAME"]));
+		self::$virtualRoot = str_replace("webroot/","",str_replace($_SERVER["DOCUMENT_ROOT"],"",str_replace("index.php", "", $_SERVER["SCRIPT_FILENAME"])));
 
 		//Remove URL's useless parts
 		if (Request::par(0) == "index") { Response::redirect(Request::par(1)); }
@@ -106,5 +106,8 @@ class App
 		
 		//Render the view and the template
 		echo self::render(self::$controlName, self::$methodName);
+		
+		//IndexController()->index();
+		
 	}
 }

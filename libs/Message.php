@@ -3,14 +3,14 @@ class Message
 {
 	var $type;
 	var $text;
-	var $package;
+	var $data;
 
-	function Message($type, $text = null, $package = null)
+	function Message($type, $text = null, $data = null)
 	{
 		$this->type = $type;
 		$this->text = $text;
-		$this->package = $package;
-        }
+		$this->data = $package;
+	}
 
 	function __toString()
 	{

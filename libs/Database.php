@@ -69,6 +69,6 @@ class Database
 	
 	public function queryOne($sql,$object = "DTO")
 	{
-		//return $this->pdo->query($sql, is_object($object)? PDO::FETCH_INTO : PDO::FETCH_CLASS ,$object);	
+		return $this->pdo->query($sql, is_object($object)? PDO::FETCH_INTO : PDO::FETCH_CLASS ,$object);	
 	}
 }
