@@ -1,0 +1,50 @@
+== Description
+
+ThinPHP is a simple and elegant, but powerful framework for PHP
+It is based on VorticePHP (http://github.com/caferrari/vorticephp), but intent to be more "thin", simpler and does not have some features that I think are not needed.
+
+== KISS
+
+Yeah, it's based on the KISS principle (http://en.wikipedia.org/wiki/KISS_principle), and because of that, this project is and aways is gonna be small.
+
+== Resources
+
+* MVC (Model, View, Controller)
+* Encrypted sessions and cookies
+* Routes (rewrite URL) (Based on Regular Expressions)
+* Template engine (Master pages)
+* Capable of connect on many data sources at same time if needed
+
+== Requisites
+
+Any webserver with rewrite module, PHP 5.2+ and git to checkout the project. if you have that, just go to your webroot folder and do:
+
+  git clone git://github.com/luanlmd/thinphp.git
+
+== Installing on Debian/Ubuntu + Apache2
+
+You need the apache2 webserver, git and php5 installed to use:
+
+  sudo aptitude install apache2 libapache2-mod-php5 git-core php5-mysql
+  sudo a2enmod rewrite
+
+then you need to edit the allowoverride setting in <tt>/etc/apache2/sites-available/000-default</tt>
+
+  sudo pico /etc/apache2/sites-available/default
+
+now change the AllowOverride in <tt>/var/www</tt> directory from NONE to ALL:
+
+  <Directory /var/www/>
+    Options Indexes FollowSymLinks MultiViews
+    AllowOverride All
+    Order allow,deny
+    allow from all
+  </Directory>
+
+and now restart the apache2 webserver and clone the project:
+
+  sudo apache2ctl restart
+  cd /var/www
+  git clone git://github.com/luanlmd/thinphp.git
+
+now it’s ready and working, look at the example app accessing: http://localhost/thinphp
