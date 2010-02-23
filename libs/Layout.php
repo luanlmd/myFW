@@ -21,7 +21,7 @@ class Layout
 	
 	public function render()
 	{
-		$file = "../layouts/{$this->name}/index.phtml";
+		$file = "../layouts/{$this->name}.phtml";
 		if (file_exists($file))
 		{
 			ob_start();
