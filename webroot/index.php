@@ -8,4 +8,6 @@ require("../libs/App.php");
 // Routes:
 // App::addRoute("^/a/?$","about"); // example.com/a is the same as example.com/about
 
+// Run the App. The id parameter will make sure all the Sessions and Cookies use unique keys and become encrypted
+
 App::run("Your Project Name/ID");
