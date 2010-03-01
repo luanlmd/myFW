@@ -1,5 +1,5 @@
 <?php
-require("../libs/App.php");
+require("../classes/App.php");
 
 // Shortcuts:
 // function p($par) { return Request::par($par); }
