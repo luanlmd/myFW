@@ -120,6 +120,7 @@ class App
 			try
 			{
 				if ($e->getCode() == 404) { $page = self::render('error', 'http404'); }
+				else if ($e->getCode() == 403) { $page = self::render('error', 'http403'); }
 				else { $page = self::render('error', 'http500'); }
 			}
 			catch(Exception $e)
