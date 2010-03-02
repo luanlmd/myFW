@@ -1,7 +1,7 @@
 <?php
 class Error
 {
-	public function handler($errno, $errstr, $errfile, $errline)
+	public static function handler($errno, $errstr, $errfile, $errline)
 	{
 		throw new Exception($errstr, $errno);
 	}

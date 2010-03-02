@@ -71,15 +71,18 @@ class App
 	
 	static function run($projectId = "thinphp")
 	{
+		//Every single error shows up
+		error_reporting(-1);
+
+		//Turn PHP Warnings into Exceptions
+		set_error_handler(array('Error', 'handler'));
+
 		self::$projectId = $projectId;
 		self::$virtualRoot = str_replace("webroot/","",str_replace($_SERVER["DOCUMENT_ROOT"],"",str_replace("index.php", "", $_SERVER["SCRIPT_FILENAME"])));
 
 		//Remove URL's useless parts
 		if (Request::par(0) == "index") { Response::redirect(Request::par(1)); }
-		if (Request::par(1) == "index") { Response::redirect(Request::par(0)); }  
-
-		//Turn PHP Warnings into Exceptions
-		set_error_handler(array('Error', 'handler'));
+		if (Request::par(1) == "index") { Response::redirect(Request::par(0)); }
 
 		//Set default settings
 		date_default_timezone_set("Etc/GMT");
