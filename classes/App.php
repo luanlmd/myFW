@@ -122,9 +122,9 @@ class App
 			Error::log($e);
 			try
 			{
-				if ($e->getCode() == 404) { $page = self::render('error', 'http404'); }
-				else if ($e->getCode() == 403) { $page = self::render('error', 'http403'); }
-				else { $page = self::render('error', 'http500'); }
+				if ($e->getCode() == 404) { $page = self::render('error', 'error404'); }
+				else if ($e->getCode() == 403) { $page = self::render('error', 'error403'); }
+				else { $page = self::render('error', 'error500'); }
 			}
 			catch(Exception $e)
 			{

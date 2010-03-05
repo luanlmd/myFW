@@ -1,15 +1,15 @@
 <?php
 class ErrorController extends Controller
 {
-    function http403()
+    function error403()
 	{
 		header("HTTP/1.1 403 Forbidden");
 	}
-	function http404()
+	function error404()
     {
 		header("HTTP/1.1 404 Not Found");
     }
-    function http500()
+    function error500()
     {
         header("HTTP/1.1 500 Internal Server Error");
     }
