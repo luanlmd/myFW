@@ -90,7 +90,7 @@ class App
 		session_start();
 		
 		//Verify if IndexController has the method/view of the first parameter
-		if (!Request::par(1) && (is_callable("IndexController",Util::urlToMethod(Request::par(0))) || View::exists("index", Request::par(0)) ))
+		if (!Request::par(1) && (is_callable(array("IndexController",Util::urlToMethod(Request::par(0)))) || View::exists("index", Request::par(0)) ))
 		{
 			self::$controlName = "index";
 			self::$methodName = Request::par(0);
