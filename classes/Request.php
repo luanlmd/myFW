@@ -35,14 +35,14 @@ class Request
 
 	static function par($index)
 	{
-		$pieces = split("/",self::uri());
+		$pieces = explode("/",self::uri());
 		array_shift($pieces);
 		if (is_numeric($index))
 		{		
 			$array = null;
 			foreach($pieces as $piece)
 			{
-				$par = split(":",$piece);
+				$par = explode(":",$piece);
 				if (!strstr($piece,":")) { $array[] = $piece; }
 			}
 			if ($index < 0)

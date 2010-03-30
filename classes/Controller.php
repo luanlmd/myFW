@@ -31,7 +31,7 @@ class Controller
 	* @val		string
 	* @access	public
 	*/
-	private function __set($attr, $val)
+	public function __set($attr, $val)
 	{
 		if ($attr == '_view') { $this->_view->set($val); }
 		else if ($attr == '_layout') { $this->_layout->set($val); }
@@ -44,7 +44,7 @@ class Controller
 	* @attr		string
 	* @access	public
 	*/
-	private function __get($attr)
+	public function __get($attr)
 	{
 		if (isset($this->$attr)) { return $this->$attr; };
 		return $this->_view->getAttr($attr);	
