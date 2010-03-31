@@ -10,7 +10,6 @@ class View
 	{
 		$this->controller = $controller;
 		$this->action = $action;
-		$this->file = "../views/{$this->controller}/{$this->action}.phtml";
 	}
 
 	static function exists($controller, $action)
@@ -36,12 +35,13 @@ class View
 	
 	public function render()
 	{
-		if (self::exists($this->controller, $this->action)) 
+		$file = "../views/{$this->controller}/{$this->action}.phtml";
+		if (file_exists($file))
 		{
 			ob_start();
-			foreach ($this->variables as $k => $v) { $$k = $v; }
+			extract($this->variables);
 
-			require ($this->file);
+			require ($file);
 
 			$content = ob_get_clean();
 			foreach ($this->variables as $k => $v) 

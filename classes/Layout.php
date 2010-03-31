@@ -25,7 +25,7 @@ class Layout
 		if (file_exists($file))
 		{
 			ob_start();
-			foreach ($this->variables as $k => $v) { $$k = $v; }
+			extract($this->variables);
 			
 			require($file);
 			
