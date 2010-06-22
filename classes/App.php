@@ -78,7 +78,7 @@ class App
 		set_error_handler(array('Error', 'handler'));
 
 		self::$projectId = $projectId;
-		self::$virtualRoot = str_replace("webroot/","",str_replace($_SERVER["DOCUMENT_ROOT"],"",str_replace("index.php", "", $_SERVER["SCRIPT_FILENAME"])));
+		self::$virtualRoot = str_replace("public/","",str_replace($_SERVER["DOCUMENT_ROOT"],"",str_replace("index.php", "", $_SERVER["SCRIPT_FILENAME"])));
 
 		//Remove URL's useless parts
 		if (Request::par(0) == "index") { Response::redirect(Request::par(1)); }
