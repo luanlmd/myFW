@@ -1,9 +1,9 @@
 <?php
 class IndexController extends Controller
 {
-	function index()
+	function indexAction()
 	{
 		// Set a var to be used in the view file
-		$this->cfile = __FILE__;
+		$this->view->cfile = __FILE__;
 	}
 }

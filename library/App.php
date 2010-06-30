@@ -7,7 +7,7 @@ function __autoload($class)
 	$fwPath = str_replace("App.php","",__FILE__);
 	
 	$files = array();
-	$files[] = "../classes/{$class}.php";
+	$files[] = "../library/{$class}.php";
 	$files[] = "../controllers/{$class}.php";
 	$files[] = "../models/{$class}.php";
 	
@@ -39,7 +39,9 @@ class App
 {
 	public static $projectId;
 	public static $virtualRoot;
-	
+
+	public static $environment = 'production';
+
 	public static $controlName;
 	public static $methodName;
 	
@@ -55,7 +57,7 @@ class App
 		$viewExists = View::exists($controllerName, $actionName);
 		
 		$controllerClass = Util::urlToClass($controllerName);
-		$actionMethod = Util::urlToMethod($actionName);
+		$actionMethod = Util::urlToMethod($actionName).'Action';
 	
 		if (class_exists($controllerClass))
 		{
@@ -119,17 +121,25 @@ class App
 		}
 		catch(Exception $e)
 		{
-			Error::log($e);
-			try
-			{
-				if ($e->getCode() == 404) { $page = self::render('error', 'error404'); }
-				else if ($e->getCode() == 403) { $page = self::render('error', 'error403'); }
-				else { $page = self::render('error', 'error500'); }
-			}
-			catch(Exception $e)
+			if (self::$environment == 'test') { throw $e; }
+			else
 			{
 				Error::log($e);
-				die("Awful Error");
+				try
+				{
+					if ($e->getCode() == 404) { $page = self::render('error', 'error404'); }
+					else if ($e->getCode() == 403) { $page = self::render('error', 'error403'); }
+					else { $page = self::render('error', 'error500'); }
+				}
+				catch(Exception $e)
+				{
+					if (self::$environment == 'test') { throw $e; }
+					else
+					{
+						Error::log($e);
+						exit("Awful Error");
+					}
+				}
 			}
 		}
 		echo $page;

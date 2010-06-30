@@ -9,14 +9,14 @@ class Layout
 		return $this->name = $name;
 	}
 	
-	public function setAttr($attr,$val)
+	public function __get($key)
 	{
-		return $this->variables[$attr] = $val;
+		return $this->variables[$key];
 	}
-	
-	public function getAttr($attr)
+
+	public function __set($key, $value)
 	{
-		return $this->variables[$attr];
+		return $this->variables[$key] = $value;
 	}
 	
 	public function render()

@@ -22,15 +22,15 @@ class View
 		if ($action) { $this->action = $action; }
 		if ($controller) { $this->controller = $controller; }
 	}
-	
-	public function setAttr($var,$value)
+
+	public function __get($key)
 	{
-		return $this->variables[$var] = $value;
+		return $this->variables[$key];
 	}
-	
-	public function getAttr($var)
+
+	public function __set($key, $value)
 	{
-		return $this->variables[$var];
+		return $this->variables[$key] = $value;
 	}
 	
 	public function render()
