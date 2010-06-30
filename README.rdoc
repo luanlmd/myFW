@@ -1,6 +1,8 @@
+= ThinPHP
+
 == Description
 
-ThinPHP is a simple and elegant, but powerful framework for PHP
+ThinPHP is a simple and elegant, and yet powerful framework for PHP
 It is based on VorticePHP (http://github.com/caferrari/vorticephp), but intent to be more "thin", simpler and does not have some features that I think are not needed.
 
 == KISS
