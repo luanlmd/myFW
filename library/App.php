@@ -39,8 +39,10 @@ class App
 {
 	public static $projectId;
 	public static $virtualRoot;
+	public static $base;
 
 	public static $environment = 'production';
+	public static $salt ;
 
 	public static $controlName;
 	public static $methodName;
@@ -81,6 +83,9 @@ class App
 
 		self::$projectId = $projectId;
 		self::$virtualRoot = str_replace("public/","",str_replace($_SERVER["DOCUMENT_ROOT"],"",str_replace("index.php", "", $_SERVER["SCRIPT_FILENAME"])));
+
+		$protocol = explode('/',$_SERVER['SERVER_PROTOCOL']);
+		self::$base = strtolower(array_shift($protocol)) . '://' . $_SERVER['HTTP_HOST'] . self::$virtualRoot;
 
 		//Remove URL's useless parts
 		if (Request::par(0) == "index") { Response::redirect(Request::par(1)); }

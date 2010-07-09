@@ -9,7 +9,7 @@ class Message
 	{
 		$this->type = $type;
 		$this->text = $text;
-		$this->data = $package;
+		$this->data = $data;
 	}
 
 	function __toString()
