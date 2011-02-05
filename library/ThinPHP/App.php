@@ -74,6 +74,7 @@ class App
 		if (class_exists($controllerClass))
 		{
 			$controllerInstance = new $controllerClass($controllerName, $actionName);
+			if (is_callable(array($controllerInstance,'init'))) $controllerInstance->init();
 			if (is_callable(array($controllerInstance,$actionMethod))) $controllerInstance->$actionMethod();
 			else if (!$viewExists) throw new Exception("Action {$controllerClass}/{$actionMethod} not found",404);
 		}
