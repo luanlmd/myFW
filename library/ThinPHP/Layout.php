@@ -1,7 +1,9 @@
 <?php
+namespace library\ThinPHP;
+
 class Layout
 {
-	private $name = "default";
+	private $name = "index";
 	private $variables = array();
 	
 	public function set($name)
@@ -21,7 +23,8 @@ class Layout
 	
 	public function render()
 	{
-		$file = "../layouts/{$this->name}.phtml";
+		$file = App::$documentRoot."layouts/{$this->name}.phtml";
+
 		if (file_exists($file))
 		{
 			ob_start();
@@ -30,9 +33,12 @@ class Layout
 			require($file);
 			
 			$content = ob_get_clean();
-			foreach ($this->variables as $k => $v) { $content = str_replace("%".$k."%",$v,$content); }
+			foreach ($this->variables as $k => $v)
+			{
+				if (!is_object($v) && !is_array($v)) { $content = str_replace("{\$".$k."}",$v,$content); }
+			}
 			return $content;
 		}
-		else { throw new Exception("Layout {$this->name} not found."); }
+		else { throw new \Exception("Layout {$this->name} not found.",404); }
 	}
 }

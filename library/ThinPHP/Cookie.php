@@ -1,4 +1,6 @@
 <?php
+namespace library\ThinPHP;
+
 class Cookie 
 {
 	private static function generateName($name)

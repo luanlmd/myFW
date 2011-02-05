@@ -1,5 +1,6 @@
 <?php
-class IndexController extends Controller
+namespace controllers;
+class Index extends \library\ThinPHP\Controller
 {
 	function indexAction()
 	{

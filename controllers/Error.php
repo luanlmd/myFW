@@ -1,5 +1,6 @@
 <?php
-class ErrorController extends Controller
+namespace controllers;
+class Error extends library\ThinPHP\Controller
 {
     function error403Action()
 	{

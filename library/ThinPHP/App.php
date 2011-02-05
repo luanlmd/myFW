@@ -1,44 +1,28 @@
 <?php
-function __autoload($class)
-{
-	if (class_exists($class, false)) { return; }
-	
-	//Find the framework path
-	$fwPath = str_replace("App.php","",__FILE__);
-	
-	$files = array();
-	$files[] = "../library/{$class}.php";
-	$files[] = "../controllers/{$class}.php";
-	$files[] = "../models/{$class}.php";
-	
-	//Application folder classes
-	foreach ($files as $file)
-	{
-		if (file_exists($file))
-		{
-			require($file);
-			return;
-		}
-	}
-
-	//Framework folder classes
-	foreach ($files as $file) 
-	{
-		if (file_exists($fwPath.$file))
-		{
-			require($file);
-			return;
-		}
-	}	
-
-	//Must not throw an Exception in order to verify if the class exist
-	return;
-}
+namespace library\ThinPHP;
 
 class App
 {
+	/** Instance of the framework
+	*
+	* @var Application
+	*/
+	
+	private static $instance;
+	
+	/** get the instance of the Sinister framework
+	*
+	* @return Sinister\Sinister
+	*/
+	public static function getInstance()
+    {
+        if (!self::$instance) self::$instance = new self();
+        return self::$instance;
+    }
+
 	public static $projectId;
 	public static $virtualRoot;
+	public static $documentRoot;
 	public static $base;
 
 	public static $environment = 'production';
@@ -54,12 +38,38 @@ class App
 		self::$routes[] = array($re,$c,$m);
 	}
 	
+	/**
+	* Convert long-url to LongUrl
+	* @param $str String
+	* @return String
+	*/
+    public static function camelize($str='')
+    {
+        return str_replace(' ', '', ucwords(str_replace(array('_', '-'), ' ', $str)));
+    }
+
+	/**
+	* Convert LongUrl to long-url
+	* @param $str String
+	* @return String
+	*/
+    public static function uncamelize($str='')
+    {
+        return preg_replace('@^_+|_+$@', '', strtolower(preg_replace("/([A-Z])/", "_$1", $str)));
+    }
+    
+    public static function urlToAction($url)
+    {
+    	return lcfirst(self::camelize($url))."Action";
+    }
+       	
 	static function render($controllerName, $actionName)
 	{
+
 		$viewExists = View::exists($controllerName, $actionName);
 		
-		$controllerClass = Util::urlToClass($controllerName);
-		$actionMethod = Util::urlToMethod($actionName).'Action';
+		$controllerClass = "\\controllers\\".self::camelize($controllerName);
+		$actionMethod = self::camelize($actionName).'Action';
 	
 		if (class_exists($controllerClass))
 		{
@@ -74,15 +84,12 @@ class App
 	}
 	
 	static function run($projectId = "thinphp")
-	{
-		//Every single error shows up
-		error_reporting(-1);
-
-		//Turn PHP Warnings into Exceptions
-		set_error_handler(array('Error', 'handler'));
+	{	
+		Exception::registerHandler();
 
 		self::$projectId = $projectId;
 		self::$virtualRoot = str_replace("public/","",str_replace($_SERVER["DOCUMENT_ROOT"],"",str_replace("index.php", "", $_SERVER["SCRIPT_FILENAME"])));
+		self::$documentRoot = realpath(dirname(__FILE__).'/../../').'/';
 
 		$protocol = explode('/',$_SERVER['SERVER_PROTOCOL']);
 		self::$base = strtolower(array_shift($protocol)) . '://' . $_SERVER['HTTP_HOST'] . self::$virtualRoot;
@@ -97,7 +104,7 @@ class App
 		session_start();
 		
 		//Verify if IndexController has the method/view of the first parameter
-		if (!Request::par(1) && (is_callable(array("IndexController",Util::urlToMethod(Request::par(0)))) || View::exists("index", Request::par(0)) ))
+		if (!Request::par(1) && (is_callable(array("\\controllers\\Index",self::urlToAction(Request::par(0)))) || View::exists("index", Request::par(0)) ))
 		{
 			self::$controlName = "index";
 			self::$methodName = Request::par(0);

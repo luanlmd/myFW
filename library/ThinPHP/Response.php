@@ -1,4 +1,6 @@
 <?php
+namespace library\ThinPHP;
+
 class Response
 {
 	static function redirect($uri = "", $external = false)
@@ -9,6 +11,12 @@ class Response
 			die();
 		}
 		header("Location: ".App::$virtualRoot.$uri);
+		die();
+	}
+
+	static function redirectBack()
+	{
+		header('Location: '. $_SERVER['HTTP_REFERER']);
 		die();
 	}
 	

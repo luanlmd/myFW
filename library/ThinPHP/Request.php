@@ -1,4 +1,6 @@
 <?php
+namespace library\ThinPHP;
+
 class Request
 {
 	static private function removeInjection($tmp)
@@ -28,6 +30,8 @@ class Request
 	static function uri()
 	{
 		$uri = $_SERVER["REQUEST_URI"];
+		$uri = explode('?', $uri);
+		$uri = $uri[0];
 		$root = substr(App::$virtualRoot, 0, -1);
 		$uri = str_replace($root,"",$uri);
 		return self::removeInjection($uri);
@@ -53,15 +57,43 @@ class Request
 		}
 		foreach($pieces as $piece)
 		{
-			$par = split(":",$piece);
+			$par = explode(":",$piece);
 			if ($par[0] == $index) { return $par[1]; }
 		}
 		return null;
 	}
+
+	public static function postToObject($type = 'DTO')
+	{
+		$object = new $type;
+
+		foreach($_POST as $k => $v)
+		{
+			$object->$k = Request::post($k);
+		}
+		return $object;
+	}
+
+	public static function postIntoObject(&$object)
+	{
+		foreach($_POST as $k => $v)
+		{
+			$setter = "set{$k}";
+			if (method_exists($object, $setter))
+			{
+				$object->$setter($v);
+			}
+			else if (property_exists($object, $k))
+			{
+				$object->$k = $v;
+			}
+		}
+		return $object;
+	}
+
 	static function isAjax()
 	{
-		$headers = getallheaders();
-		return isset($headers["X-Requested-With"]);
+		return isset($_SERVER["X-Requested-With"]);
 	}
 	static function isPost()
 	{

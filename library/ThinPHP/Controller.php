@@ -1,4 +1,6 @@
 <?php
+namespace library\ThinPHP;
+
 class Controller
 {
 	var $view = null;
@@ -21,6 +23,7 @@ class Controller
 		else
 		{
 			$this->layout->content = $this->view->render();
+			if (method_exists($this, 'defaultLayout')) { $this->defaultLayout(); }
 			return $this->layout->render();
 		}
 	}

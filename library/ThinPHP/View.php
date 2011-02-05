@@ -1,4 +1,6 @@
 <?php
+namespace library\ThinPHP;
+
 class View
 {
 	private $action = null;
@@ -14,7 +16,7 @@ class View
 
 	static function exists($controller, $action)
 	{
-		return file_exists("../views/{$controller}/{$action}.phtml");
+		return file_exists(App::$documentRoot."views/{$controller}/{$action}.phtml");
 	}
 	
 	public function set($controller = null, $action = null)
@@ -35,7 +37,7 @@ class View
 	
 	public function render()
 	{
-		$file = "../views/{$this->controller}/{$this->action}.phtml";
+		$file = App::$documentRoot."views/{$this->controller}/{$this->action}.phtml";
 		if (file_exists($file))
 		{
 			ob_start();
@@ -46,10 +48,10 @@ class View
 			$content = ob_get_clean();
 			foreach ($this->variables as $k => $v) 
 			{
-				if (!is_object($v)) { $content = str_replace("%".$k."%",$v,$content); }
+				if (!is_object($v) && !is_array($v)) { $content = str_replace("{\$".$k."}",$v,$content); }
 			}
 			return $content;
 		}
-		else { throw new Exception("View {$this->controller}/{$this->action} not found"); }	
+		else { throw new \Exception("View {$this->controller}/{$this->action} not found"); }	
 	}
 }

@@ -1,4 +1,6 @@
 <?php
+namespace library\ThinPHP;
+
 class Message
 {
 	var $type;
