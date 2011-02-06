@@ -3,13 +3,19 @@ namespace library\ThinPHP;
 
 class Layout
 {
+	private $request;
 	private $name = "index";
 	private $variables = array();
 	
-	public function set($name)
+	public function __construct($request)
+	{
+		$this->request = $request;
+	}
+
+	/*public function set($name)
 	{
 		return $this->name = $name;
-	}
+	}*/
 	
 	public function __get($key)
 	{
@@ -23,7 +29,9 @@ class Layout
 	
 	public function render()
 	{
-		$file = App::$documentRoot."layouts/{$this->name}.phtml";
+		$path = implode('/',$this->request->path);
+		if ($path) { $path.='/'; }
+		$file = $this->request->environment->documentRoot."layouts/{$path}{$this->name}.phtml";
 
 		if (file_exists($file))
 		{
@@ -39,6 +47,6 @@ class Layout
 			}
 			return $content;
 		}
-		else { throw new \Exception("Layout {$this->name} not found.",404); }
+		throw new \Exception("Layout {$this->name} not found.",404);
 	}
 }

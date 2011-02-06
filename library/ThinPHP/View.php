@@ -3,18 +3,15 @@ namespace library\ThinPHP;
 
 class View
 {
-	private $action = null;
-	private $controller = null;
-	private $file = null;
+	private $request;
 	private $variables = array();
 	
-	function __construct($controller, $action)
+	function __construct($request)
 	{
-		$this->controller = $controller;
-		$this->action = $action;
+		$this->request = $request;
 	}
 
-	static function exists($controller, $action)
+	/*static function exists($controller, $action)
 	{
 		return file_exists(App::$documentRoot."views/{$controller}/{$action}.phtml");
 	}
@@ -23,7 +20,7 @@ class View
 	{
 		if ($action) { $this->action = $action; }
 		if ($controller) { $this->controller = $controller; }
-	}
+	}*/
 
 	public function __get($key)
 	{
@@ -37,12 +34,14 @@ class View
 	
 	public function render()
 	{
-		$file = App::$documentRoot."views/{$this->controller}/{$this->action}.phtml";
+		$path = implode('/',$this->request->path);
+		if ($path) { $path.='/'; }
+		$file = $this->request->environment->documentRoot."views/{$path}{$this->request->controller}/{$this->request->action}.phtml";
+
 		if (file_exists($file))
 		{
 			ob_start();
 			extract($this->variables);
-
 			require ($file);
 
 			$content = ob_get_clean();
@@ -52,6 +51,6 @@ class View
 			}
 			return $content;
 		}
-		else { throw new \Exception("View {$this->controller}/{$this->action} not found"); }	
+		throw new \Exception("View {$this->request->controller}/{$this->request->action} not found");
 	}
 }

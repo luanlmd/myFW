@@ -6,9 +6,9 @@ class Index extends Master
 	{
 		parent::init();
 		$this->example = new \stdClass();
-		$this->example->cfile = __FILE__;
-		
+		$this->example->cfile = __FILE__;		
 	}
+	
 	function indexAction()
 	{
 		// Set a var to be used in the view file

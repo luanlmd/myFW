@@ -3,112 +3,99 @@ namespace library\ThinPHP;
 
 class Request
 {
-	static private function removeInjection($tmp)
-	{
-		$tmp = str_ireplace("--", "", $tmp);
-		$tmp = str_ireplace("'", "''", $tmp);
-		return trim($tmp);
-	}
-
-	static function get($v = null)
-	{
-		global $_GET;
-		if (!$v) { return $_GET; }
-		if (!isset($_GET[$v])) { return null; }
+	public $environment;
+	
+	public $path;
+	public $controller;
+	public $action;
+	
+	public $parNum = array();
+	public $parStr = array();
 		
-		return self::removeInjection($_GET[$v]);
-	}
-
-	static function post($v)
+	function __construct(Environment $environment)
 	{
-		global $_POST;
-		if (!isset($_POST[$v]))
-			return '';
-		return self::removeInjection($_POST[$v]);
+		$this->environment = $environment;
 	}
 	
-	static function uri()
+	private function parseUri()
 	{
-		$uri = $_SERVER["REQUEST_URI"];
-		$uri = explode('?', $uri);
-		$uri = $uri[0];
-		$root = substr(App::$virtualRoot, 0, -1);
-		$uri = str_replace($root,"",$uri);
-		return self::removeInjection($uri);
-	}
-
-	static function par($index)
-	{
-		$pieces = explode("/",self::uri());
-		array_shift($pieces);
-		if (is_numeric($index))
-		{		
-			$array = null;
-			foreach($pieces as $piece)
-			{
-				$par = explode(":",$piece);
-				if (!strstr($piece,":")) { $array[] = $piece; }
-			}
-			if ($index < 0)
-			{
-				$index = count($array) + $index;	
-			}
-			return (($array)? ((isset($array[$index]))? $array[$index] : null)  : null);
-		}
-		foreach($pieces as $piece)
+		$parts = explode('/', $this->environment->uri);
+		foreach ($parts as $p)
 		{
-			$par = explode(":",$piece);
-			if ($par[0] == $index) { return $par[1]; }
-		}
-		return null;
-	}
-
-	public static function postToObject($type = 'DTO')
-	{
-		$object = new $type;
-
-		foreach($_POST as $k => $v)
-		{
-			$object->$k = Request::post($k);
-		}
-		return $object;
-	}
-
-	public static function postIntoObject(&$object)
-	{
-		foreach($_POST as $k => $v)
-		{
-			$setter = "set{$k}";
-			if (method_exists($object, $setter))
+			if(strpos($p,':'))
 			{
-				$object->$setter($v);
+				$p = explode(':',$p);
+				$this->parStr[$p[0]] = $p[1];
 			}
-			else if (property_exists($object, $k))
+			else if (trim($p))
 			{
-				$object->$k = $v;
+				$this->parNum[] = $p;
+			}					
+		}
+			
+		$path = array();
+		foreach($this->parNum as $p)
+		{
+			$path[] = $p;
+			if (!$this->hasPath(join('/',$path)))
+			{
+				unset($path[count($path)-1]);
+				break;
 			}
 		}
-		return $object;
-	}
 
-	static function isAjax()
+		$this->parNum = array_slice($this->parNum, count($path));
+
+		$this->path = $path;
+		$this->action = $this->parNum[count($this->parNum) - 1];
+		$this->controller = $this->parNum[count($this->parNum) - 2];
+			
+		if (!$this->action) { $this->action = 'index'; }
+		if (!$this->controller) { $this->controller = 'index'; }
+	}
+	
+	public function isAjax()
 	{
 		return isset($_SERVER["X-Requested-With"]);
 	}
-	static function isPost()
+	public function isPost()
 	{
 		return ($_SERVER["REQUEST_METHOD"] == "POST");
 	}
-	static function isGet()
+	public function isGet()
 	{
 		return ($_SERVER["REQUEST_METHOD"] == "GET");
 	}
-	static function isDelete()
+	public function isDelete()
 	{
 		return ($_SERVER["REQUEST_METHOD"] == "DELETE");
 	}
-	static function isPut()
+	public function isPut()
 	{
 		return ($_SERVER["REQUEST_METHOD"] == "PUT");
+	}
+	
+	public function par($key)
+	{
+		if (is_number($key))
+		{
+			return (isset($this->parNum[$key]))? $this->parNum[$key] : null;
+		}
+		else
+		{
+			return (isset($this->parStr[$key]))? $this->parStr[$key] : null;
+		}
+	}
+	
+	private function hasPath($path)
+	{
+		return file_exists($this->environment->documentRoot . 'controllers/'.$path);
+	}
+	
+	function run()
+	{
+		$this->parseUri();
+		$dispacher = new Dispacher($this);
+		return $dispacher->run();
 	}
 }

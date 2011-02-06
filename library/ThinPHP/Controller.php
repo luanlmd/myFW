@@ -3,13 +3,16 @@ namespace library\ThinPHP;
 
 class Controller
 {
-	var $_view = null;
-	var $_layout = null;
 	
-	function __construct($controller, $action)
+	public $_request;
+	public $_view;
+	public $_layout;
+	
+	function __construct($request)
 	{
-		$this->_view = new View($controller, $action);
-		$this->_layout = new Layout();
+		$this->_request = $request;
+		$this->_view = new View($request);
+		$this->_layout = new Layout($request);
 	}
 
 	/**
@@ -19,7 +22,7 @@ class Controller
 	 */
 	function render()
 	{
-		if (Request::isAjax()) { return $this->_view->render(); }
+		if ($this->_request->isAjax()) { return $this->_view->render(); }
 		else
 		{
 			$this->_layout->content = $this->_view->render();
