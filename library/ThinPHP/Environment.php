@@ -21,8 +21,8 @@ class Environment
 		
 		$protocol = explode('/',$server['SERVER_PROTOCOL']);
 		$this->protocol = $protocol[0];
-		$this->base = strtolower(array_shift($protocol)) . '://' . $server['HTTP_HOST'] . $this->virtualRoot;
-		
+		$this->base = strtolower(array_shift($protocol)) . '://' . $server['HTTP_HOST'] .'/'. $this->virtualRoot;
+				
 		$this->development_env = (isset($server['DEVELOPMENT_ENV']))? $server['DEVELOPMENT_ENV'] : 'production' ;
 	}
 }

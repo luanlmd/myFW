@@ -8,7 +8,7 @@ class Controller
 	public $_view;
 	public $_layout;
 	
-	function __construct($request)
+	function __construct(Request $request)
 	{
 		$this->_request = $request;
 		$this->_view = new View($request);

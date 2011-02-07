@@ -12,10 +12,10 @@ class Layout
 		$this->request = $request;
 	}
 
-	/*public function set($name)
+	public function set($name)
 	{
 		return $this->name = $name;
-	}*/
+	}
 	
 	public function __get($key)
 	{

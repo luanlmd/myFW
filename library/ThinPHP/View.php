@@ -11,17 +11,6 @@ class View
 		$this->request = $request;
 	}
 
-	/*static function exists($controller, $action)
-	{
-		return file_exists(App::$documentRoot."views/{$controller}/{$action}.phtml");
-	}
-	
-	public function set($controller = null, $action = null)
-	{
-		if ($action) { $this->action = $action; }
-		if ($controller) { $this->controller = $controller; }
-	}*/
-
 	public function __get($key)
 	{
 		return $this->variables[$key];
