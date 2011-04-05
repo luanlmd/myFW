@@ -1,7 +1,7 @@
 <?php
 namespace controllers;
 
-class Master extends \library\ThinPHP\Controller
+class Master extends \library\myFW\Controller
 {
 	function init()
 	{

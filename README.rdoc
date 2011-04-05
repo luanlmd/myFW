@@ -1,8 +1,8 @@
-= ThinPHP
+= myFW
 
 == Description
 
-ThinPHP is a simple and elegant, and yet powerful framework for PHP
+myFW is a simple and elegant, and yet powerful framework for PHP
 It is based on VorticePHP (http://github.com/caferrari/vorticephp), but intent to be more "thin", simpler and does not have some features that I think are not needed.
 
 == KISS
@@ -21,7 +21,7 @@ Yeah, it's based on the KISS principle (http://en.wikipedia.org/wiki/KISS_princi
 
 Any webserver with rewrite module, PHP 5.2+ and git to checkout the project. if you have that, just go to your webroot folder and do:
 
-  git clone git://github.com/luanlmd/thinphp.git
+  git clone git://github.com/luanlmd/myFW.git
 
 == Installing on Debian/Ubuntu + Apache2
 
@@ -47,6 +47,6 @@ restart the apache2 webserver and clone the project:
 
   sudo apache2ctl restart
   cd /var/www
-  git clone git://github.com/luanlmd/thinphp.git
+  git clone git://github.com/luanlmd/myFW.git
 
-now it should be working, access http://localhost/thinphp
+now it should be working, access http://localhost/myFW
