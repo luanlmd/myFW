@@ -1,5 +1,5 @@
 <?php
-namespace controllers;
+namespace app\controllers;
 class Index extends Master
 {
 	function init()

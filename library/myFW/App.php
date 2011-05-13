@@ -1,17 +1,19 @@
 <?php
-namespace library\myFW;
+namespace myFW;
 
 class App
 {
-	static function addRoute($re, $c = "index", $m = "index")
+	static $key;
+	static $routes = array();
+
+	static function addRoute($re, $controller = "index", $action = "index", $path = '')
 	{
-		self::$routes[] = array($re,$c,$m);
+		self::$routes[] = array($re,$controller,$action, $path);
 	}
 	
-	static function run($server, $key = "thinphp")
+	static function run($server, $key = "myFW")
 	{	
-		Exception::registerHandler();
-
+		self::$key = $key;
 		$environment = new Environment($server);
 		$request = new Request($environment);
 		return $request->run();

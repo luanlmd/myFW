@@ -1,7 +1,7 @@
 <?php
-namespace controllers;
+namespace app\controllers;
 
-class Master extends \library\myFW\Controller
+class Master extends \myFW\Controller
 {
 	function init()
 	{

@@ -1,5 +1,5 @@
 <?php
-namespace library\myFW;
+namespace myFW;
 
 class Controller
 {
@@ -7,12 +7,14 @@ class Controller
 	public $_request;
 	public $_view;
 	public $_layout;
+	public $_response;
 	
 	function __construct(Request $request)
 	{
 		$this->_request = $request;
-		$this->_view = new View($request);
-		$this->_layout = new Layout($request);
+		$this->_response = new Response($request);
+		$this->_view = new View($this->_request, $this->_response);
+		$this->_layout = new Layout($this->_request, $this->_response);
 	}
 
 	/**

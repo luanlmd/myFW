@@ -1,32 +1,56 @@
 <?php
-namespace library\myFW;
+namespace myFW;
 
 class Response
 {
-	static function redirect($uri = "", $external = false)
+
+	private $request;
+	
+	function __construct($request)
 	{
-		if ($external)
+		$this->request = $request;
+	}
+	
+	function redirect($uri = '')
+	{
+		if (preg_match('@^http@',$uri))
 		{
-			header("Location: ". new Link($uri));
+			header('Location: '. $uri);
 			die();
 		}
-		header("Location: ".App::$virtualRoot.$uri);
+		header('Location: '.$this->request->environment->base.$uri);
 		die();
 	}
 
-	static function redirectBack()
+	function redirectBack()
 	{
 		header('Location: '. $_SERVER['HTTP_REFERER']);
 		die();
 	}
 	
-	static function error($message)
+	function error($message, $data = false)
 	{
-		throw new Exception("Not yet implemented");
+		Session::set('_message', new Message(-1, $message, $data));
 	}
 	
-	static function success($message, $uri)
+	function success($message, $redirect = false)
 	{
-		throw new Exception("Not yet implemented");
+		Session::set('_message', new Message(1, $message));
+		if ($redirect) { $this->redirect($redirect); }
+	}
+	
+	function warning($message, $data = false)
+	{
+		Session::set('_message', new Message(0, $message, $data));
+	}
+	
+	function setHeader($key, $value)
+	{
+		header($key . ': ' . $value);
+	}
+
+	function getMessage()
+	{
+		return Session::getAndDel('_message');
 	}
 }

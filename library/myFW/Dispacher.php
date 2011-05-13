@@ -1,5 +1,5 @@
 <?php
-namespace library\myFW;
+namespace myFW;
 
 class Dispacher
 {
@@ -30,14 +30,22 @@ class Dispacher
         return preg_replace('@^_+|_+$@', '', strtolower(preg_replace("/([A-Z])/", "_$1", $str)));
     }
     
-	public function render($path, $controller, $action)
+	public function render()
 	{
+		$path = $this->request->path;
+		$controller = $this->request->controller;
+		$action = $this->request->action;
+	
 		$controller = $this->camelize($controller);
 		$action = lcfirst($this->camelize($action.'-action'));
-		$path = implode('\\',$path);
-		if ($path) { $path.='\\'; }
 		
-		$controllerClass = 'controllers\\'.$path.$controller;
+		if (is_array($path))
+		{
+			$path = implode('\\',$path);
+			if ($path) { $path.='\\'; }
+		}
+		
+		$controllerClass = 'app\\controllers\\'.$path.$controller;
 		
 		if(class_exists($controllerClass))
 		{
@@ -48,18 +56,26 @@ class Dispacher
 		}
 		else
 		{
-			throw new Exception('Controller '. $controllerClass .'not found.',404);
+			throw new \Exception('Controller '. $controllerClass .' not found.',404);
 		}
 	}
 
 	public function run()
 	{
+		$env = $this->request->environment->development_env;
 		try
-		{
-			return $this->render($this->request->path,$this->request->controller,$this->request->action);
+		{		
+			return $this->render();
 		}
-		catch(Exception $e)
+		catch(Exceptions\HttpException $e)
 		{
+			$this->request->controller = 'error';
+			$this->request->action = 'http';
+			return $this->render();
+		}
+		catch(\Exception $e)
+		{
+			
 			throw $e;
 		}
 	}

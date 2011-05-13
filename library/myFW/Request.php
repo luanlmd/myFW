@@ -1,5 +1,5 @@
 <?php
-namespace library\myFW;
+namespace myFW;
 
 class Request
 {
@@ -32,6 +32,18 @@ class Request
 				$this->parNum[] = $p;
 			}					
 		}
+		
+		foreach (App::$routes as $r)
+		{
+			if (preg_match($r[0],$this->environment->uri))
+			{
+				$this->controller = $r[1];
+				$this->action = $r[2];
+				$this->path = explode('/',$r[3]);
+				
+				return;
+			}
+		}
 			
 		$path = array();
 		foreach($this->parNum as $p)
@@ -47,9 +59,16 @@ class Request
 		$this->parNum = array_slice($this->parNum, count($path));
 
 		$this->path = $path;
-		$this->action = $this->parNum[count($this->parNum) - 1];
-		$this->controller = $this->parNum[count($this->parNum) - 2];
-			
+
+		$this->action = end($this->parNum);
+		$this->controller = prev($this->parNum);
+
+		if (count($this->parNum) === 1)
+		{
+			$this->action = 'index';
+			$this->controller = $this->parNum[count($this->parNum) - 1];
+		}
+
 		if (!$this->action) { $this->action = 'index'; }
 		if (!$this->controller) { $this->controller = 'index'; }
 	}
@@ -89,7 +108,25 @@ class Request
 	
 	private function hasPath($path)
 	{
-		return file_exists($this->environment->documentRoot . 'controllers/'.$path);
+		return file_exists($this->environment->documentRoot . 'app/controllers/'.$path);
+	}
+	
+	public function postIntoObject($object)
+	{
+		$props = get_object_vars($object);
+		foreach ($_POST as $k => $v)
+		{
+			$method = 'set'.ucfirst($k);
+			if (method_exists($object,$method))
+			{
+				$object->$method($v);
+			}
+			else if (array_key_exists($k,$props))
+			{
+				$object->$k = $v;
+			}
+		}
+		return $object;
 	}
 	
 	function run()

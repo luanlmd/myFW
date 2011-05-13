@@ -1,17 +1,17 @@
 <?php
-namespace library\myFW;
+namespace myFW;
 
 class Cookie 
 {
 	private static function generateName($name)
 	{
-		return md5(Crypt::encrypt($name,App::$projectId));
+		return md5(Crypt::encrypt($name,App::$key));
 	} 
 	public static function set ($name, $value, $lifetime = 172800, $domain = null)
 	{
 		$lifetime = time() + $lifetime;
 		$name = self::generateName($name);
-		$value = Crypt::encrypt($value,App::$projectId.$name);
+		$value = Crypt::encrypt($value,App::$key.$name);
 		setcookie($name, $value, $lifetime, $domain);
 		return $value;
 	}
@@ -25,6 +25,6 @@ class Cookie
 	{
 		$name = self::generateName($name);
 		return $_COOKIE[$name];
-		return (isset($_COOKIE[$name])? Crypt::decrypt($_COOKIE[$name],App::$projectId.$name) : null);
+		return (isset($_COOKIE[$name])? Crypt::decrypt($_COOKIE[$name],App::$key.$name) : null);
 	}
 }

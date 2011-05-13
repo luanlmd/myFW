@@ -1,5 +1,5 @@
 <?php
-namespace library\myFW;
+namespace myFW;
 
 class Util
 {

@@ -1,17 +1,18 @@
 <?php
-namespace library\myFW;
+namespace myFW;
 
 class Session 
 {
 	public static function set($name , $value)
 	{
-		if(isset($_SESSION[md5(App::$projectId)]))
+		@session_start();
+		if(isset($_SESSION[md5(App::$key)]))
 		{
-			$arr = unserialize($_SESSION[md5(App::$projectId)]);
+			$arr = unserialize($_SESSION[md5(App::$key)]);
 			$arr[$name] = $value;
 		}
 		else $arr = array($name => $value);
-		$_SESSION[md5(App::$projectId)] = serialize($arr);
+		$_SESSION[md5(App::$key)] = serialize($arr);
 		return $value;
 	}
 
@@ -22,28 +23,29 @@ class Session
 
 	public static function clear()
 	{
-		$_SESSION[md5(App::$projectId)] = null;
+		@session_start();
+		$_SESSION[md5(App::$key)] = null;
 	}
 
 	public static function get($name)
 	{
-		if(!isset($_SESSION[md5(App::$projectId)])) { return null; }
-		$arr = unserialize($_SESSION[md5(App::$projectId)]);
+		@session_start();
+		if(!isset($_SESSION[md5(App::$key)])) { return null; }
+		$arr = unserialize($_SESSION[md5(App::$key)]);
 		return isset($arr[$name])? $arr[$name] : null;
 	}
 
 	public static function getAndDel($name)
 	{
-		if(!isset($_SESSION[md5(App::$projectId)])) { return null; }
-		$arr = unserialize($_SESSION[md5(App::$projectId)]);
+		$value = self::get($name);
 		self::set($name, null);
-		return isset($arr[$name])? $arr[$name] : null;
+		return $value;
 	}
 
 	public static function exists($name)
 	{
-		if(!isset($_SESSION[md5(App::$projectId)])) { return false; }
-		$arr = unserialize($_SESSION[md5(App::$projectId)]);
+		if(!isset($_SESSION[md5(App::$key)])) { return false; }
+		$arr = unserialize($_SESSION[md5(App::$key)]);
 		return isset($arr[$name]);
 	}
 }

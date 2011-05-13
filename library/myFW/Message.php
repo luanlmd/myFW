@@ -1,5 +1,5 @@
 <?php
-namespace library\myFW;
+namespace myFW;
 
 class Message
 {
@@ -7,7 +7,7 @@ class Message
 	var $text;
 	var $data;
 
-	function Message($type, $text = null, $data = null)
+	function __construct($type, $text = null, $data = null)
 	{
 		$this->type = $type;
 		$this->text = $text;

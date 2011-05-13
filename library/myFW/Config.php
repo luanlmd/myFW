@@ -1,17 +1,15 @@
 <?php
-namespace library\myFW;
+namespace myFW;
 
 class Config
 {
-	static $configs = array();
-
-	static function set($key, $value)
+	static function get($section, $key)
 	{
-		self::$configs[$key] = $value;
-	}
-
-	static function get($key)
-	{
-		return (isset(self::$configs[$key]))? self::$configs[$key] : null;
+		$config = parse_ini_file('../config.ini', true);
+		if (isset($config[$section][$key]))
+		{
+			return $config[$section][$key];
+		}
+		throw new \Exception("Couldn't find Section {$section} and Key {$key} in config file");
 	}
 }

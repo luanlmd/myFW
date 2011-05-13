@@ -1,10 +1,8 @@
 <?php
 require('library/SplClassLoader.php');
+set_include_path(realpath(dirname(__FILE__)).'/library' . PATH_SEPARATOR . realpath(dirname(__FILE__)) . PATH_SEPARATOR . get_include_path());
 $loader = new SplClassLoader();
-$loader->setIncludePath(realpath(dirname(__FILE__)));
 $loader->register();
-
-//library\ThinPHP\App::init();
 
 // Shortcuts:
 function d($a, $d = false) { var_dump($a); if ($d) { die(); } }
@@ -13,4 +11,4 @@ function d($a, $d = false) { var_dump($a); if ($d) { die(); } }
 // App::addRoute("^/a/?$","about"); // example.com/a is the same as example.com/about
 
 // Run the App.
-echo library\myFW\App::run($_SERVER);
+echo myFW\App::run($_SERVER);

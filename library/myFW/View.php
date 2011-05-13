@@ -1,14 +1,16 @@
 <?php
-namespace library\myFW;
+namespace myFW;
 
 class View
 {
-	private $request;
-	private $variables = array();
+	protected $request;
+	protected $response;
+	protected $variables = array();
 	
-	function __construct($request)
+	function __construct($request, $response)
 	{
 		$this->request = $request;
+		$this->response = $response;
 	}
 
 	public function __get($key)
@@ -21,11 +23,17 @@ class View
 		return $this->variables[$key] = $value;
 	}
 	
+	public function snippet($name)
+	{
+		$snippet = new Snippet($this->request, $this->response,  $name, $this->variables);
+		return $snippet->render();
+	}
+	
 	public function render()
 	{
 		$path = implode('/',$this->request->path);
 		if ($path) { $path.='/'; }
-		$file = $this->request->environment->documentRoot."views/{$path}{$this->request->controller}/{$this->request->action}.phtml";
+		$file = $this->request->environment->documentRoot."app/views/{$path}{$this->request->controller}/{$this->request->action}.phtml";
 
 		if (file_exists($file))
 		{
@@ -36,7 +44,7 @@ class View
 			$content = ob_get_clean();
 			foreach ($this->variables as $k => $v) 
 			{
-				if (!is_object($v) && !is_array($v)) { $content = str_replace("{\$".$k."}",$v,$content); }
+				if (!is_object($v) && !is_array($v)) { $content = str_replace("<!--\$".$k."-->",$v,$content); }
 			}
 			return $content;
 		}
